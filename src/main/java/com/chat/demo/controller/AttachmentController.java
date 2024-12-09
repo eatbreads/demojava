@@ -17,7 +17,12 @@ public class AttachmentController {
     @Autowired
     private AttachmentService attachmentService;
 
-    // 上传附件
+    /**
+     * 上传附件
+     * @param chatRoomId
+     * @param file
+     * @return
+     */
     @PostMapping
     public Response<AttachmentDto> uploadAttachment(@RequestParam("chatRoomId") Long chatRoomId,
                                                     @RequestParam("file") MultipartFile file) {
@@ -32,6 +37,11 @@ public class AttachmentController {
         }
     }
 
+    /**
+     * 根据房间 ID 获取附件
+     * @param roomId
+     * @return
+     */
     @GetMapping("/{roomId}")
     public Response<List<AttachmentDto>> getAttachmentsByChatRoomId(@PathVariable Long roomId) {
         List<AttachmentDto> attachments = attachmentService.getAttachmentsByChatRoomId(roomId);
@@ -40,6 +50,11 @@ public class AttachmentController {
                 Response.success(attachments);
     }
 
+    /**
+     * 删除附件
+     * @param id
+     * @return
+     */
     @DeleteMapping("/{id}")
     public Response<Void> deleteAttachment(@PathVariable Long id) {
         boolean success = attachmentService.deleteAttachment(id);

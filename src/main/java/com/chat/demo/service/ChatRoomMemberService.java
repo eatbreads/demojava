@@ -1,7 +1,10 @@
 package com.chat.demo.service;
+import com.chat.demo.entity.ChatRoom;
 import com.chat.demo.entity.ChatRoomMember;
+import com.chat.demo.entity.DTO.ChatRoomDto;
 import com.chat.demo.entity.DTO.ChatRoomMemberDto;
 import com.chat.demo.repository.ChatRoomMemberRepository;
+import com.chat.demo.repository.ChatRoomRepository;
 import com.chat.demo.response.Response;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,12 @@ public class ChatRoomMemberService {
 
     @Autowired
     private ChatRoomMemberRepository chatRoomMemberRepository;
+
+    @Autowired
+    private ChatRoomRepository chatRoomRepository;
+
+    @Autowired
+    private ChatRoomService chatRoomService;
 
     // 获取聊天室的所有成员
     public List<ChatRoomMemberDto> getMembersByChatRoom(Long chatRoomId) {
@@ -43,9 +52,20 @@ public class ChatRoomMemberService {
         chatRoomMemberRepository.deleteById(id);
     }
 
-    // 获取用户所加入的所有聊天室
-    public List<ChatRoomMemberDto> getChatRoomsByUserId(Long userId) {
-        return chatRoomMemberRepository.findChatRoomsByUserId(userId);
+    // 根据用户 ID 获取聊天室
+    public List<Long> getChatRoomsByUserId(Long userId) {
+        return chatRoomMemberRepository.findByUserId(userId)
+                .stream()
+                .map(ChatRoomMember::getChatRoomId)
+                .collect(Collectors.toList());
+    }
+
+    // 根据用户 ID 获取聊天室 DTO
+    public List<ChatRoomDto> getChatRoomDtosByUserId(Long userId) {
+        List<Long> chatRoomIds = chatRoomMemberRepository.findChatRoomIdsByUserId(userId);
+        return chatRoomIds.stream()
+                .map(chatRoomService::getChatRoomById)
+                .collect(Collectors.toList());
     }
 
     // 将实体转换为 DTO

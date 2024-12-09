@@ -1,5 +1,6 @@
 package com.chat.demo.entity;
 
+import com.chat.demo.entity.DTO.ChatRoomDto;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
